@@ -36,6 +36,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--acc);outline-offset
 .item .ds{display:block;font-size:calc(14px*var(--fz,1));color:var(--sub);line-height:1.4;margin-top:2px}
 .item .ch{flex:none;color:var(--sub);font-size:calc(20px*var(--fz,1))}
 .item.soon{opacity:.5;cursor:default}
+.duo{display:flex;gap:8px;align-items:stretch}.duo .item{flex:1;min-width:0}
+.duo .solve{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:92px;border:1px solid var(--line);border-radius:14px;background:var(--acc2);color:var(--ink);text-decoration:none;font-size:calc(22px*var(--fz,1))}
+.duo .solve b{font-size:calc(14px*var(--fz,1))}.duo .solve:active{transform:scale(.97)}
 .item.soon .ch{font-size:calc(12px*var(--fz,1));border:1px solid var(--line);border-radius:999px;padding:2px 8px}
 .main .item{padding:18px 16px}
 .main .item .ic{width:56px;height:56px;font-size:calc(30px*var(--fz,1))}
@@ -146,7 +149,10 @@ var CAT = {"title": "이승수 영어 선생님", "short": "이승수영어", "t
     if (c.children && !c.app) return '<a class="item" href="#/' + path.concat(c.id).join('/') + '">' + body + '<span class="ch">›</span></a>';
     if (c.book) return '<a class="item" data-app="' + esc(c.book) + '" href="' + esc(location.origin + '/' + c.book) + '">' + body + '<span class="ch">›</span></a>';   // 교사용 교재 뷰어(코드 = leess:tcode)
     var target = T && c.teacher ? c.teacher : c.app;
-    return '<a class="item" data-app="' + esc(target) + '"' + (T && c.tk ? ' data-tk="' + esc(c.tk) + '"' : '') + ' href="' + esc(appUrl(target)) + '">' + body + '<span class="ch">›</span></a>';
+    var main = '<a class="item" data-app="' + esc(target) + '"' + (T && c.tk ? ' data-tk="' + esc(c.tk) + '"' : '') + ' href="' + esc(appUrl(target)) + '">' + body + '<span class="ch">›</span></a>';
+    // 11-11 사용자 「선생님앱 수업관리는 교재 원문이 보이는데, 학생들과 똑같이 문제도 풀 수 있게」: 원문 보기로 연결된 칸 옆에 학생 화면(문제 풀기) 단추
+    if (T && c.teacher && c.app && /orig\.html|leess-books/.test(c.teacher)) return '<div class="duo">' + main + '<a class="solve" data-app="' + esc(c.app) + '" href="' + esc(appUrl(c.app)) + '">✏️<b>문제 풀기</b></a></div>';
+    return main;
   }
   function recent() {
     var out = [], seenApp = {};
